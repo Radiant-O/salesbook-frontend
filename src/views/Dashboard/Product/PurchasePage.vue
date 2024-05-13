@@ -42,7 +42,8 @@
                   <div class="w-full">
                     <label class="block text-sm font-medium text-gray-700"> Supplier </label>
 
-                    <select v-model="formState.purchases[index].supplier_id" :label="`Supplier ${index + 1}`"
+                    <select v-model="selectedSupplierIds[index]"
+                      @change="handleSupplierChange(selectedSupplierIds[index], index)" :label="`Supplier ${index + 1}`"
                       :name="`Supplier ${index + 1}`" :placeholder="`Add Supplier ${index + 1}`"
                       class="w-full font-light font-Satoshi400 border-neutral-900 text-[14px] outline-none !p-[14px] border-[1px] opacity-[0.8029] rounded-[4px] text-sm">
                       <option v-for="supplier in suppliersByProductId" :key="supplier.id" :value="supplier.id">
@@ -101,7 +102,6 @@
                   <div class="w-full">
                     <label class="block text-sm font-medium text-gray-700">
                       Product Identifier
-                      <span class="text-red-500">*</span>
                     </label>
 
                     <input :label="`product identifier ${index + 1}`" :name="`product identifier ${index + 1}`"
@@ -115,7 +115,7 @@
                       <span class="text-red-500">*</span>
                     </label>
 
-                    <input :label="`expired date ${index + 1}`" :name="`expired date ${index + 1}`"
+                    <input required :label="`expired date ${index + 1}`" :name="`expired date ${index + 1}`"
                       :placeholder="`expired date ${index + 1}`" v-model="formState.purchases[index].expiry_date"
                       type="date" :min="minDate"
                       class="w-full font-light font-Satoshi400 border-neutral-900 text-[14px] outline-none !p-[14px] border-[1px] opacity-[0.8029] rounded-[4px] text-sm" />
@@ -132,7 +132,9 @@
       :url="'purchases'" :modalTitle="modalTitle" />
     <EditModal v-if="showEditModal" @close="closeEditModal" :items="items"
       @fetchDataForSubCategory="fetchDataForSubCategory" :formField="purchaseFormFields" @updated="forceRefresh"
-      :url="'purchases'" :minDate="true" />
+      :url="'purchases'" :minDate="true">
+
+    </EditModal>
     <UploadModal v-if="showUploadModal" @close="closeUploadModal" @updated="forceRefresh" :url="'/purchases'"
       type="Purchase" />
   </DashboardLayout>
@@ -158,6 +160,7 @@ const getShowSupplierPrice = ref()
 const isReadonly = ref(true)
 const systemValue = ref()
 const allSuppliers = ref()
+const selectedSupplierIds = ref([])
 
 const { allProductTypeName, suppliersByProductId } = storeToRefs(productsStore)
 
@@ -188,6 +191,7 @@ const formState = reactive({
     }
   ]
 })
+
 const addPurchases = () => {
   const lastPurchases = formState.purchases[formState.purchases.length - 1]
   console.log("What is the form state", formState)
@@ -203,6 +207,7 @@ const addPurchases = () => {
       product_identifier: '',
       expiry_date: ''
     })
+    selectedSupplierIds.value.push('')
   }
 }
 const resetForm = () => {
@@ -224,6 +229,12 @@ const closePruchaseModal = () => {
   showPurchaseModal.value = !showPurchaseModal.value
   resetForm()
 }
+
+const handleSupplierChange = (supplierId, index) => {
+  selectedSupplierIds.value[index] = supplierId
+  formState.purchases[index].supplier_id = supplierId;
+}
+
 const handleAddPurchase = async () => {
   pruchaseLoading.value = true
   let payload = {
@@ -269,7 +280,7 @@ const { fetchDataForSelect, fetchDataForSubCategory } = useSelectComposable(
   url,
   'Product Type',
   'Price',
-  'cost_price'
+  'Selling Pice'
 )
 const { forceUpdate } = usePostComposable('/purchases', purchaseFormFields)
 
@@ -342,7 +353,7 @@ const fetchSupplierByProductId = async (id) => {
     }
     return res;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching Supppliers:", error);
   }
 };
 // const fetchSuppliersPrice = async (productId, supplierId) => {
@@ -432,8 +443,8 @@ const updatePriceId = (costPrice) => {
 const updatePriceTypeId = (productTypeId, index) => {
   const productInfo = allProductTypeName.value.find(product => product.id === productTypeId);
   if (productInfo) {
-    formState.purchases[index].price_id = ""
-    formState.purchases[index].display_price = ""
+    formState.purchases[index].price_id = "";
+    formState.purchases[index].display_price = "";
   } else {
     formState.purchases[index].price_id = "";
     formState.purchases[index].display_price = "";
@@ -533,6 +544,7 @@ watch(
       if (supplierId !== oldSupplierId[index]) {
         console.log("Supplier ID", supplierId)
 
+        formState.purchases[index].supplier_id = supplierId
         if (supplierId && getProductId.value) {
           fetchSuppliersPriceByProduct(getProductId.value, supplierId, index)
         }
@@ -564,7 +576,8 @@ watch(
     newProductTypeIds.forEach((productTypeId, index) => {
       if (productTypeId !== oldProductTypeIds[index]) {
         console.log("Product ID", getProductId.value)
-        updatePriceTypeId(productTypeId, index)
+        // updatePriceTypeId(productTypeId, index)
+        console.log("Selected Suppliers ID", selectedSupplierIds)
         if (productTypeId) {
           isReadonly.value = false
           getProductId.value = productTypeId;
@@ -588,7 +601,7 @@ watch(() => formState.purchases.map((p) => p.cost_price),
 )
 
 onMounted(async () => {
-  fetchSystemSellingPrice()
+  // fetchSystemSellingPrice()
   fetchAllSuppliers()
 })
 

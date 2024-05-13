@@ -49,7 +49,7 @@ const imagePath = ref()
 const hasMinDate = ref(props.minDate)
 
 console.log('Min Date', hasMinDate.value)
-
+console.log("Form Fields", formField)
 watch(
   items,
   (newItems) => {
