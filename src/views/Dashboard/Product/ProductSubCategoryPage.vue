@@ -53,7 +53,7 @@ import { onMounted } from "vue";
 import { productSubCategoryFormFields } from "@/formfields/formFields";
 import { useSharedComponent } from "@/composable/useSharedComponent";
 
-const emit = defineEmits(['update', 'close']);
+const emit = defineEmits(['update', 'close', 'forceRefresh']);
 
 const {
   DataTableLayout,
@@ -81,11 +81,11 @@ const {
   closeDeleteModal,
 } = useDeleteComposable();
 
-const { showModal, forceUpdate, closeModal } = usePostComposable(
-  "/product-sub-categories",
-  productSubCategoryFormFields,
-  emit
-);
+// const { showModal, forceUpdate, closeModal } = usePostComposable(
+//   "/product-sub-categories",
+//   productSubCategoryFormFields,
+//   emit
+// );
 const {  handleEdit, showEditModal, closeEditModal, items } = useEditComposable(emit);
 const { fetchDataForSelect } = useSelectComposable(productSubCategoryFormFields);
 

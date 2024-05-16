@@ -25,11 +25,16 @@ export function useUploadComposable(url, file, type, emit) {
       let response = await apiService.post(`process-csv`, formData)
       await fetchPage(url.value, 1)
       catchAxiosSuccess(response)
+      if(response.message === 'File uploaded successful'){
+        showUploadModal.value = false
+      }
       showUploadModal.value = false
       console.log('Show modal is now ', showUploadModal)
+      console.log("Response", response)
       loading.value = false
-       emit('close')
-       emit('updated')
+      // emit('forceRefresh')
+      // emit('close')
+      // emit('updated')
       return response
     } catch (error) {
       catchAxiosError(error)

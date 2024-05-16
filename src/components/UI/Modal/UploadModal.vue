@@ -89,24 +89,24 @@ const handleFileChange = () => {
   }
 };
 const { type, url } = toRefs(props);
-const { uploadForm, loading, forceUpdate, showUploadModal } = useUploadComposable(
+const { uploadForm, loading, showUploadModal } = useUploadComposable(
   url,
   uploadedFile,
   type,
   emit
 );
 
-const forceRefresh = () => {
-  forceUpdate.value++;
-};
+// const forceRefresh = () => {
+//   forceUpdate.value++;
+// };
 
 const handleUpload = () => {
   uploadForm();
   console.log()
   if (showUploadModal.value === false) {
-    emit("updated");
-    emit("close");
-    forceRefresh()
+    // emit("updated");
+    // emit("close");
+    // forceRefresh()
     console.log("It entered the refresh function")
   }
   // emit("close");
