@@ -81,11 +81,11 @@ const {
   closeDeleteModal,
 } = useDeleteComposable();
 
-// const { showModal, forceUpdate, closeModal } = usePostComposable(
-//   "/product-sub-categories",
-//   productSubCategoryFormFields,
-//   emit
-// );
+const { showModal, forceUpdate, closeModal } = usePostComposable(
+  "/product-sub-categories",
+  productSubCategoryFormFields,
+  emit
+);
 const {  handleEdit, showEditModal, closeEditModal, items } = useEditComposable(emit);
 const { fetchDataForSelect } = useSelectComposable(productSubCategoryFormFields);
 

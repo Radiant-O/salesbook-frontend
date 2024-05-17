@@ -69,11 +69,25 @@ import { ref, toRefs } from "vue";
 
 // const { useUploadComposable } = useSharedComponent();
 import { useUploadComposable } from "@/composable/useUploadComposable";
-const emit = defineEmits(["close", "updated"]);
+import apiService from '@/services/apiService'
+import { useReadComposable } from '@/composable/useReadComposable'
+import { catchAxiosError, catchAxiosSuccess } from '@/services/Response'
+const emit = defineEmits(["close", "updated", 'forceRefresh']);
+const { fetchPage } = useReadComposable()
 
 const fileInput = ref(null);
 const fileName = ref("");
 let uploadedFile = ref(null);
+
+const products = ref([])
+const uniqueKeys = ref([])
+const currentPage = ref(1)
+const itemsPerPage = ref(1)
+const totalPage = ref(1)
+const lastPage = ref(1)
+const isLoading = ref(false)
+const hasError = ref(false)
+
 const props = defineProps({
   type: String,
   url: String,
@@ -89,24 +103,77 @@ const handleFileChange = () => {
   }
 };
 const { type, url } = toRefs(props);
-const { uploadForm, loading, showUploadModal } = useUploadComposable(
+const { uploadForm, loading, forceUpdate, showUploadModal } = useUploadComposable(
   url,
   uploadedFile,
   type,
   emit
 );
 
-// const forceRefresh = () => {
-//   forceUpdate.value++;
-// };
+const forceRefresh = () => {
+  forceUpdate.value++;
+};
+
+// function extractUniqueKeys(dataArray) {
+//   const excludedKeys = Array.isArray(props.excludedKeys) ? props.excludedKeys : []
+
+//   return dataArray.reduce((keys, obj) => {
+//     Object.keys(obj).forEach((key) => {
+//       if (!keys.includes(key) && !excludedKeys.includes(key)) {
+//         keys.push(key)
+//       }
+//     })
+//     return keys
+//   }, [])
+// }
+
+// async function fetchPage(apiUrl, page) {
+//   try {
+//     // Check if apiUrl already contains a query parameter
+//     const separator = apiUrl.includes('?') ? '&' : '?'
+//     const fullUrl = `${apiUrl}${separator}page=${page}`
+
+//     const data = await apiService.get(fullUrl)
+//     //const data = await apiService.get(`${apiUrl}?page=${page}`);
+//     //console.log('success');
+//     // process paginated endpoint
+//     if (data.data && Array.isArray(data.data)) {
+//       products.value = data.data
+//       uniqueKeys.value = extractUniqueKeys(data.data)
+//       currentPage.value = data.current_page
+//       lastPage.value = data.last_page
+//       totalPage.value = data.total
+//       itemsPerPage.value = data.per_page
+//     } else if (Array.isArray(data)) {
+//       //process un paginated endpoint
+//       products.value = data
+//       uniqueKeys.value = extractUniqueKeys(data)
+//     } else {
+//       products.value = []
+//     }
+//     return data
+//   } catch (error) {
+//     console.log('Error fetching page:', error)
+//     hasError.value = true
+//   } finally {
+//     isLoading.value = false
+//   }
+// }
+
 
 const handleUpload = () => {
   uploadForm();
-  console.log()
   if (showUploadModal.value === false) {
-    // emit("updated");
-    // emit("close");
-    // forceRefresh()
+     fetchPage(props.url, 1)
+    // fetchPage(props.url, 1)
+    emit("updated");
+    emit("close");
+   
+    forceRefresh()
+    // emit("forceRefresh");
+    
+
+   
     console.log("It entered the refresh function")
   }
   // emit("close");

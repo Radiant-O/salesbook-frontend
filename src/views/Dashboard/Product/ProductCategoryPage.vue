@@ -59,6 +59,8 @@
 import { productCategoryFormFields } from "@/formfields/formFields";
 import { useSharedComponent } from "@/composable/useSharedComponent";
 
+const emit = defineEmits(['update', 'close', 'forceRefresh']);
+
 console.log(productCategoryFormFields);
 const {
   DataTableLayout,
@@ -75,13 +77,13 @@ const {
   useUploadComposable,
   
 } = useSharedComponent('product-categories');
-const { showUploadModal, closeUploadModal } = useUploadComposable();
+const { showUploadModal, closeUploadModal } = useUploadComposable(emit);
 
 const { showModal, forceUpdate, closeModal } = usePostComposable(
   "/product-categories",
   productCategoryFormFields
 );
-const emit = defineEmits("forceRefresh");
+
 const {  handleEdit,showEditModal, closeEditModal, items } = useEditComposable(emit);
 
 const forceRefresh = () => {

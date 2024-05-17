@@ -23,6 +23,8 @@
 import { watch, defineProps, toRefs, ref } from "vue";
 import Loader from "@/components/UI/Loader.vue";
 import { useDeleteComposable } from "@/composable/useDeleteComposable";
+import { useReadComposable } from '@/composable/useReadComposable'
+const { fetchPage } = useReadComposable()
 
 const emit = defineEmits(["close", "updated"]);
 const title = ref();
@@ -42,6 +44,7 @@ const handleDelete = () => {
   console.log("Delete botton clicked")
   deleteForm();
   if (showDeleteModal.value === false) {
+    // fetchPage(props.url, 1)
     emit("updated");
     emit("close");
   }
