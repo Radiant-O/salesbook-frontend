@@ -15,7 +15,7 @@
           {{ props?.toggleButtonLabel }}
         </button>
       </div>
-        <!-- <div>
+      <!-- <div>
         <button @click="$emit('toggleModal')" class="btn-brand !px-4">
           {{ props?.toggleButtonLabel }}
         </button>
@@ -81,41 +81,41 @@
                 </td>
               </template>
             </tr>
-            </tbody>
-            <tbody v-if="searchQuery === ''">
-              <!-- Loop through product which represents Items for each row -->
-              <tr v-for="(product, index) in products" :key="product.id">
-                <td class="px-5 py-5 border-brand border-x-[1px] bg-white text-sm">
-                  {{
-                  (parseInt(currentPage, 10) - 1) * parseInt(itemsPerPage, 10) + index + 1
-                  }}
-                </td>
-                <td v-for="key in uniqueKeys" :key="key" class="px-5 py-5 border-brand border-r-[1px] bg-white text-sm">
-                  <!-- Check for columns with onclick event. e.g click on product to view on details -->
-                  <template v-if="clickableKeys[key]">
-                    <span @click.prevent="clickableKeys[key](product)" class="text-blue-500 cursor-pointer">{{
-                      product[key] }}</span>
-                  </template>
-
-                  <!-- Check if key indicates an image, logo, or file -->
-                  <template v-else-if="isMediaKey(key)">
-                    <img :src="product[key]" alt="Media" class="w-10 h-10 bg-slate-500/[30%] rounded-lg object-cover" />
-                  </template>
-
-                  <template v-else>
-                    {{ product[key] }}
-                  </template>
-                </td>
-                <!-- render content for additional code -->
-                <template v-for="(col, index) in additionalColumns" :key="`${index}`">
-                  <td class="px-5 py-5 border-b border-x-[1px] border-brand bg-white text-sm">
-                    <button @click="col.action(product)">
-                      {{ formatKey(col.name) }}
-                    </button>
-                  </td>
+          </tbody>
+          <tbody v-if="searchQuery === ''">
+            <!-- Loop through product which represents Items for each row -->
+            <tr v-for="(product, index) in products" :key="product.id">
+              <td class="px-5 py-5 border-brand border-x-[1px] bg-white text-sm">
+                {{
+                (parseInt(currentPage, 10) - 1) * parseInt(itemsPerPage, 10) + index + 1
+                }}
+              </td>
+              <td v-for="key in uniqueKeys" :key="key" class="px-5 py-5 border-brand border-r-[1px] bg-white text-sm">
+                <!-- Check for columns with onclick event. e.g click on product to view on details -->
+                <template v-if="clickableKeys[key]">
+                  <span @click.prevent="clickableKeys[key](product)" class="text-blue-500 cursor-pointer">{{
+                    product[key] }}</span>
                 </template>
-              </tr>
-            </tbody>
+
+                <!-- Check if key indicates an image, logo, or file -->
+                <template v-else-if="isMediaKey(key)">
+                  <img :src="product[key]" alt="Media" class="w-10 h-10 bg-slate-500/[30%] rounded-lg object-cover" />
+                </template>
+
+                <template v-else>
+                  {{ product[key] }}
+                </template>
+              </td>
+              <!-- render content for additional code -->
+              <template v-for="(col, index) in additionalColumns" :key="`${index}`">
+                <td class="px-5 py-5 border-b border-x-[1px] border-brand bg-white text-sm">
+                  <button @click="col.action(product)">
+                    {{ formatKey(col.name) }}
+                  </button>
+                </td>
+              </template>
+            </tr>
+          </tbody>
         </table>
         <div v-if="searchResults?.length === 0 && searchQuery" class="flex justify-center py-10 text-lg">
           <p class="font-light italic">Record not found</p>
@@ -240,14 +240,8 @@ function getSerialNumber(index) {
 // Check if user have permission to view
 // Check if user has permission to view
 const store = useStore();
-
-let st =store.getUser.user.permission.permissions.find(p => p)
-
-console.log('Permision', st)
-
 const permissions = computed(() => {
   const perm = store.getUser.user.permission.permissions.find(p => p.page_name === props.pageName);
-  console.log("PErmision Check", perm && perm.write == 1)
   return perm && perm.write == 1; 
 });
 
