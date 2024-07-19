@@ -36,7 +36,7 @@
         <div class="mb-3 flex flex-col w-full">
           <AuthInput
             label="Address*"
-            :error="errors.address"
+            :error="errors.company_address"
             type="text"
             placeholder="Enter Address"
             v-model="formData.company_address"
