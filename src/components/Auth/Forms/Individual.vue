@@ -24,7 +24,7 @@
       </div>
       <div class="flex lg:flex-row flex-col w-full gap-[20px]">
         <div class="mb-3 flex flex-col w-full">
-          <AuthInput label="Date of Birth (Optional)"  type="text" placeholder="Enter Address"
+          <AuthInput label="Date of Birth (Optional)"  type="date" placeholder="Select DOB"
             v-model="dob" :max="minDate" :errorsMsg="dobError" />
         </div>
         <div class="mb-3 flex flex-col w-full">
@@ -39,9 +39,9 @@
             :error="errors.address"
             type="text"
             placeholder="Enter Address"
-            v-model="formData.address"
+            v-model="formData.company_address"
             :max="minDate"
-            :errorsMsg="errorsMsg.address"
+            :errorsMsg="errorsMsg.company_address"
           />
         </div>
       </div>
@@ -142,7 +142,7 @@ const formData = reactive({
   firstName: "",
   lastName: "",
   company_name: "",
-  address: "",
+  company_address: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -153,7 +153,7 @@ const errors = reactive({
   firstName: false,
   lastName: false,
   company_name: false,
-  address: false,
+  company_address: false,
   email: false,
   password: false,
   confirmPassword: false,
@@ -166,7 +166,7 @@ const errorsMsg = {
   firstName: "First name is required",
   lastName: "Last name is required",
   company_name: "Company Name is required",
-  address: "Address is required",
+  company_address: "Address is required",
   email: "Email is required",
   password: "Password is required",
   confirmPassword: "Password does not match",
@@ -309,7 +309,7 @@ const handleSignup = async () => {
     company_name: formData.company_name,
     middle_name: middelName.value,
     phone_number: phoneNo.value,
-    company_address: formData.ada,
+    company_address: formData.company_address,
     dob: dob.value,
     email: formData.email,
     password: formData.password,
