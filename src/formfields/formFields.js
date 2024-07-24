@@ -300,6 +300,14 @@ export const productTypeFormFields = ref([
     databaseField: 'product_type_name'
   },
   {
+    label: 'Bar Code',
+    type: 'password',
+    value: '',
+    required: false,
+    placeholder: 'Enter bar code',
+    databaseField: 'barcode'
+  },
+  {
     label: 'Product Type Image',
     type: 'image',
     value: '',
